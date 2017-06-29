@@ -19,9 +19,23 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
   }
 
   render() {
+    return this.renderUI(this.state.autopilotState)
+  }
+
+  renderUI(pilotState: IAutopilotState | undefined) {
     return (
-      <div className="row">
-        <div className="col-xs-12 text-center" id="course">{this.state.autopilotState ? Math.round(radsToDeg(this.state.autopilotState.course)) : ''}</div>
+      <div className="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+        <div className="row">
+          <div className="col-xs-12 text-center" id="course">{pilotState ? Math.round(radsToDeg(pilotState.course)) : ''}</div>
+        </div>
+        <div className="row">
+          <div className="col-xs-5 col-xs-offset-1">
+            <button disabled={pilotState === undefined || !pilotState.enabled} className="btn btn-primary">Standby</button>
+          </div>
+          <div className="col-xs-5">
+            <button disabled={pilotState === undefined || pilotState.enabled} className="btn btn-primary">Auto</button>
+          </div>
+        </div>
       </div>
     )
   }
