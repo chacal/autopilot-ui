@@ -19,10 +19,6 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
   }
 
   render() {
-    return this.renderUI(this.state.autopilotState)
-  }
-
-  renderUI(pilotState: IAutopilotState | undefined) {
     return (
       <div className="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
         <div className="row">
