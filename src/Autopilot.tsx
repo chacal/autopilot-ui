@@ -1,11 +1,14 @@
 import * as React from 'react'
+import Bacon = require('baconjs')
 import AutopilotAPI from './AutopilotAPI'
 import './Autopilot.css'
 import {SensorEvents} from '@chacal/js-utils'
 import IAutopilotState = SensorEvents.IAutopilotState
+import Property = Bacon.Property
 
 interface AutopilotComponentState {
   autopilotState?: IAutopilotState
+  variation?: number
 }
 
 export default class Autopilot extends React.Component<{}, AutopilotComponentState> {
@@ -15,7 +18,8 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
     super()
     this.state = {}
     this.pilotApi = new AutopilotAPI('ws://mqtt-home.chacal.fi:8883', '10')
-    this.pilotApi.autopilotStates.onValue(autopilotState => this.setState({autopilotState}))
+    Bacon.combineAsArray(this.pilotApi.autopilotStates, magneticVariationFromSignalK())
+      .onValues((autopilotState, variation) => this.setState({autopilotState, variation}))
   }
 
   render() {
@@ -39,8 +43,10 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
   }
 
   renderCourse() {
+    const course = this.state.autopilotState ? Math.round(radsToDeg(this.state.autopilotState.course + (this.state.variation || 0))) : '-'
+    const units = this.state.autopilotState ? (this.state.variation ? '°T' : '°M') : ''
     return (
-      <div className="col-xs-12 text-center" id="course">{this.state.autopilotState ? Math.round(radsToDeg(this.state.autopilotState.course)) : ''}</div>
+      <div className="col-xs-12 text-center" id="course">{course}<span className="units">{units}</span></div>
     )
   }
 
@@ -69,6 +75,13 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
       </div>
     )
   }
+}
+
+function magneticVariationFromSignalK(): Property<{}, number> {
+  return Bacon.fromPromise(
+    fetch('http://freya-raspi.chacal.fi/signalk/v1/api/vessels/self/navigation/magneticVariation/value')
+      .then(r => r.json())
+  ).toProperty(undefined)
 }
 
 function radsToDeg(rads: number): number { return rads * 180 / Math.PI }

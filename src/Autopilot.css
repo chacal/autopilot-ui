@@ -4,5 +4,4 @@
 div.main-content { margin: 20px 5px; }
 div.main-content button { width: 100%; height:50px; margin: 10px 0; font-size: 18px; padding-left: 0; padding-right: 0; }
 div.main-content #course { height: 50px; line-height: 50px; margin: 10px 0; font-size: 60px; }
-div.main-content #course:not(:empty)::after { content: "°T"; position: absolute; font-size: 30px; line-height: 30px; }
-div.main-content #course:empty::after { content: "-"; }
+div.main-content #course .units { position: absolute; font-size: 30px; line-height: 30px; }
