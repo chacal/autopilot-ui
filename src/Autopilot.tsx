@@ -32,6 +32,12 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
           {renderMainButton('Standby', pilotState, p => !p.enabled)}
           {renderMainButton('Auto', pilotState, p => p.enabled)}
         </div>
+        <div className="row" id="adjustments">
+          {renderCourseButton('-10°', pilotState)}
+          {renderCourseButton('-1°', pilotState)}
+          {renderCourseButton('1°', pilotState)}
+          {renderCourseButton('10°', pilotState)}
+        </div>
       </div>
     )
   }
@@ -47,6 +53,14 @@ function renderMainButton(text: string, pilotState: IAutopilotState | undefined,
   return (
     <div className="col-xs-5 col-xs-offset-1">
       <button disabled={pilotState === undefined || shouldDisable(pilotState)} className="btn btn-primary">{text}</button>
+    </div>
+  )
+}
+
+function renderCourseButton(text: string, pilotState: IAutopilotState | undefined) {
+  return (
+    <div className="col-xs-3">
+      <button className="btn btn-default" disabled={pilotState === undefined || !pilotState.enabled}>{text}</button>
     </div>
   )
 }
