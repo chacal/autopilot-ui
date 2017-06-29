@@ -26,19 +26,29 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
     return (
       <div className="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
         <div className="row">
-          <div className="col-xs-12 text-center" id="course">{pilotState ? Math.round(radsToDeg(pilotState.course)) : ''}</div>
+          {renderCourse(pilotState)}
         </div>
         <div className="row">
-          <div className="col-xs-5 col-xs-offset-1">
-            <button disabled={pilotState === undefined || !pilotState.enabled} className="btn btn-primary">Standby</button>
-          </div>
-          <div className="col-xs-5">
-            <button disabled={pilotState === undefined || pilotState.enabled} className="btn btn-primary">Auto</button>
-          </div>
+          {renderMainButton('Standby', pilotState, p => !p.enabled)}
+          {renderMainButton('Auto', pilotState, p => p.enabled)}
         </div>
       </div>
     )
   }
+}
+
+function renderCourse(pilotState: IAutopilotState | undefined) {
+  return (
+    <div className="col-xs-12 text-center" id="course">{pilotState ? Math.round(radsToDeg(pilotState.course)) : ''}</div>
+  )
+}
+
+function renderMainButton(text: string, pilotState: IAutopilotState | undefined, shouldDisable: (s: IAutopilotState) => boolean) {
+  return (
+    <div className="col-xs-5 col-xs-offset-1">
+      <button disabled={pilotState === undefined || shouldDisable(pilotState)} className="btn btn-primary">{text}</button>
+    </div>
+  )
 }
 
 function radsToDeg(rads: number): number { return rads * 180 / Math.PI }
