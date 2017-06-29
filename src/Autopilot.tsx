@@ -29,14 +29,14 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
           {this.renderCourse()}
         </div>
         <div className="row">
-          {this.renderMainButton('Standby', p => !p.enabled)}
-          {this.renderMainButton('Auto', p => p.enabled)}
+          {this.renderMainButton(2, 'Standby', p => !p.enabled)}
+          {this.renderMainButton(1, 'Auto', p => p.enabled)}
         </div>
         <div className="row" id="adjustments">
-          {this.renderCourseButton('-10°')}
-          {this.renderCourseButton('-1°')}
-          {this.renderCourseButton('1°')}
-          {this.renderCourseButton('10°')}
+          {this.renderCourseButton(6, '-10°')}
+          {this.renderCourseButton(5, '-1°')}
+          {this.renderCourseButton(4, '1°')}
+          {this.renderCourseButton(3, '10°')}
         </div>
       </div>
     )
@@ -48,18 +48,28 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
     )
   }
 
-  renderMainButton(text: string, shouldDisable: (s: IAutopilotState) => boolean) {
+  renderMainButton(buttonId: number, text: string, shouldDisable: (s: IAutopilotState) => boolean) {
     return (
       <div className="col-xs-5 col-xs-offset-1">
-        <button disabled={this.state.autopilotState === undefined || shouldDisable(this.state.autopilotState)} className="btn btn-primary">{text}</button>
+        <button
+          onClick={e => this.pilotApi.sendButtonPress(buttonId)}
+          disabled={this.state.autopilotState === undefined || shouldDisable(this.state.autopilotState)}
+          className="btn btn-primary">
+            {text}
+        </button>
       </div>
     )
   }
 
-  renderCourseButton(text: string) {
+  renderCourseButton(buttonId: number, text: string) {
     return (
       <div className="col-xs-3">
-        <button className="btn btn-default" disabled={this.state.autopilotState === undefined || !this.state.autopilotState.enabled}>{text}</button>
+        <button
+          onClick={e => this.pilotApi.sendButtonPress(buttonId)}
+          disabled={this.state.autopilotState === undefined || !this.state.autopilotState.enabled}
+          className="btn btn-default">
+            {text}
+        </button>
       </div>
     )
   }
