@@ -2,9 +2,9 @@ import * as React from 'react'
 import mqtt = require('mqtt')
 import Client = mqtt.Client
 
-import './App.css'
+import './Autopilot.css'
 
-class App extends React.Component<{}, {}> {
+class Autopilot extends React.Component<{}, {}> {
   mqttClient: Client
 
   constructor() {
@@ -33,4 +33,4 @@ class App extends React.Component<{}, {}> {
   }
 }
 
-export default App
+export default Autopilot
