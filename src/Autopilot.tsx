@@ -26,43 +26,43 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
     return (
       <div className="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
         <div className="row">
-          {renderCourse(pilotState)}
+          {this.renderCourse()}
         </div>
         <div className="row">
-          {renderMainButton('Standby', pilotState, p => !p.enabled)}
-          {renderMainButton('Auto', pilotState, p => p.enabled)}
+          {this.renderMainButton('Standby', p => !p.enabled)}
+          {this.renderMainButton('Auto', p => p.enabled)}
         </div>
         <div className="row" id="adjustments">
-          {renderCourseButton('-10°', pilotState)}
-          {renderCourseButton('-1°', pilotState)}
-          {renderCourseButton('1°', pilotState)}
-          {renderCourseButton('10°', pilotState)}
+          {this.renderCourseButton('-10°')}
+          {this.renderCourseButton('-1°')}
+          {this.renderCourseButton('1°')}
+          {this.renderCourseButton('10°')}
         </div>
       </div>
     )
   }
-}
 
-function renderCourse(pilotState: IAutopilotState | undefined) {
-  return (
-    <div className="col-xs-12 text-center" id="course">{pilotState ? Math.round(radsToDeg(pilotState.course)) : ''}</div>
-  )
-}
+  renderCourse() {
+    return (
+      <div className="col-xs-12 text-center" id="course">{this.state.autopilotState ? Math.round(radsToDeg(this.state.autopilotState.course)) : ''}</div>
+    )
+  }
 
-function renderMainButton(text: string, pilotState: IAutopilotState | undefined, shouldDisable: (s: IAutopilotState) => boolean) {
-  return (
-    <div className="col-xs-5 col-xs-offset-1">
-      <button disabled={pilotState === undefined || shouldDisable(pilotState)} className="btn btn-primary">{text}</button>
-    </div>
-  )
-}
+  renderMainButton(text: string, shouldDisable: (s: IAutopilotState) => boolean) {
+    return (
+      <div className="col-xs-5 col-xs-offset-1">
+        <button disabled={this.state.autopilotState === undefined || shouldDisable(this.state.autopilotState)} className="btn btn-primary">{text}</button>
+      </div>
+    )
+  }
 
-function renderCourseButton(text: string, pilotState: IAutopilotState | undefined) {
-  return (
-    <div className="col-xs-3">
-      <button className="btn btn-default" disabled={pilotState === undefined || !pilotState.enabled}>{text}</button>
-    </div>
-  )
+  renderCourseButton(text: string) {
+    return (
+      <div className="col-xs-3">
+        <button className="btn btn-default" disabled={this.state.autopilotState === undefined || !this.state.autopilotState.enabled}>{text}</button>
+      </div>
+    )
+  }
 }
 
 function radsToDeg(rads: number): number { return rads * 180 / Math.PI }
