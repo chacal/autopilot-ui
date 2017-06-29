@@ -1,36 +1,30 @@
 import * as React from 'react'
-import mqtt = require('mqtt')
-import Client = mqtt.Client
-
+import AutopilotAPI from './AutopilotAPI'
 import './Autopilot.css'
+import {SensorEvents} from '@chacal/js-utils'
+import IAutopilotState = SensorEvents.IAutopilotState
 
-class Autopilot extends React.Component<{}, {}> {
-  mqttClient: Client
+interface AutopilotComponentState {
+  autopilotState?: IAutopilotState
+}
+
+export default class Autopilot extends React.Component<{}, AutopilotComponentState> {
+  pilotApi: AutopilotAPI
 
   constructor() {
     super()
-    this.mqttClient = this.startMqttClient('ws://mqtt-home.chacal.fi:8883')
+    this.state = {}
+    this.pilotApi = new AutopilotAPI('ws://mqtt-home.chacal.fi:8883', '10')
+    this.pilotApi.autopilotStates.onValue(autopilotState => this.setState({autopilotState}))
   }
 
   render() {
     return (
-      <div>Render UI here</div>
+      <div className="row">
+        <div className="col-xs-12 text-center" id="course">{this.state.autopilotState ? Math.round(radsToDeg(this.state.autopilotState.course)) : ''}</div>
+      </div>
     )
-  }
-
-  startMqttClient(brokerUrl: string) {
-    const mqttClient = mqtt.connect(brokerUrl)
-    mqttClient.on('connect', () => {
-      mqttClient.subscribe('/sensor/+/+/state')
-      mqttClient.on('message', this.onMqttMessage.bind(this))
-    })
-    return mqttClient
-  }
-
-  onMqttMessage(topic: string, message: Buffer) {
-    const [, , instance, tag, ] = topic.split('/')
-    console.log('Got message:', instance, tag)
   }
 }
 
-export default Autopilot
+function radsToDeg(rads: number): number { return rads * 180 / Math.PI }
