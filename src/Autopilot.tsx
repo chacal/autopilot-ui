@@ -43,11 +43,18 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
   }
 
   renderCourse() {
-    const course = this.state.autopilotState ? Math.round(radsToDeg(this.state.autopilotState.course + (this.state.variation || 0))) : '-'
-    const units = this.state.autopilotState ? (this.state.variation ? '°T' : '°M') : ''
-    return (
-      <div className="col-xs-12 text-center" id="course">{course}<span className="units">{units}</span></div>
-    )
+    const pilotState = this.state.autopilotState
+    const variation = this.state.variation || 0
+
+    if(pilotState && pilotState.course) {
+      return courseDiv(Math.round(radsToDeg(pilotState.course + variation)), variation ? '°T' : '°M')
+    } else {
+      return courseDiv()
+    }
+
+    function courseDiv(course: string | number = '-', units: string = '') {
+      return <div className="col-xs-12 text-center" id="course">{course}<span className="units">{units}</span></div>
+    }
   }
 
   renderMainButton(buttonId: number, text: string, shouldDisable: (s: IAutopilotState) => boolean, extraClass: string = '') {
