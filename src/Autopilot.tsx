@@ -29,7 +29,7 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
           {this.renderCourse()}
         </div>
         <div className="row">
-          {this.renderMainButton(2, 'Standby', p => !p.enabled)}
+          {this.renderMainButton(2, 'Standby', p => !p.enabled, 'col-xs-offset-1')}
           {this.renderMainButton(1, 'Auto', p => p.enabled)}
         </div>
         <div className="row" id="adjustments">
@@ -50,9 +50,9 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
     )
   }
 
-  renderMainButton(buttonId: number, text: string, shouldDisable: (s: IAutopilotState) => boolean) {
+  renderMainButton(buttonId: number, text: string, shouldDisable: (s: IAutopilotState) => boolean, extraClass: string = '') {
     return (
-      <div className="col-xs-5 col-xs-offset-1">
+      <div className={`col-xs-5 ${extraClass}`}>
         <button
           onClick={e => this.pilotApi.sendButtonPress(buttonId)}
           disabled={this.state.autopilotState === undefined || shouldDisable(this.state.autopilotState)}
