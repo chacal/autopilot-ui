@@ -8,6 +8,7 @@ import Property = Bacon.Property
 
 const MQTT_BROKER = 'ws://freya-raspi.chacal.fi:8883'
 const SIGNALK_BASEURL = 'http://freya-raspi.chacal.fi'
+const INSTANCE = '10'
 
 interface AutopilotComponentState {
   autopilotState?: IAutopilotState
@@ -20,7 +21,7 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
   constructor() {
     super()
     this.state = {}
-    this.pilotApi = new AutopilotAPI(MQTT_BROKER, '10')
+    this.pilotApi = new AutopilotAPI(MQTT_BROKER, INSTANCE)
     Bacon.combineAsArray(this.pilotApi.autopilotStates, magneticVariationFromSignalK())
       .onValues((autopilotState, variation) => this.setState({autopilotState, variation}))
   }
