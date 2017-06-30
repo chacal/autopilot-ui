@@ -6,6 +6,9 @@ import {SensorEvents} from '@chacal/js-utils'
 import IAutopilotState = SensorEvents.IAutopilotState
 import Property = Bacon.Property
 
+const MQTT_BROKER = 'ws://mqtt-home.chacal.fi:8883'
+const SIGNALK_BASEURL = 'http://freya-raspi.chacal.fi'
+
 interface AutopilotComponentState {
   autopilotState?: IAutopilotState
   variation?: number
@@ -17,7 +20,7 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
   constructor() {
     super()
     this.state = {}
-    this.pilotApi = new AutopilotAPI('ws://mqtt-home.chacal.fi:8883', '10')
+    this.pilotApi = new AutopilotAPI(MQTT_BROKER, '10')
     Bacon.combineAsArray(this.pilotApi.autopilotStates, magneticVariationFromSignalK())
       .onValues((autopilotState, variation) => this.setState({autopilotState, variation}))
   }
@@ -86,7 +89,7 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
 
 function magneticVariationFromSignalK(): Property<{}, number> {
   return Bacon.fromPromise(
-    fetch('http://freya-raspi.chacal.fi/signalk/v1/api/vessels/self/navigation/magneticVariation/value')
+    fetch(SIGNALK_BASEURL + '/signalk/v1/api/vessels/self/navigation/magneticVariation/value')
       .then(r => r.json())
   ).toProperty(undefined)
 }
