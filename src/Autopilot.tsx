@@ -6,7 +6,7 @@ import {SensorEvents} from '@chacal/js-utils'
 import IAutopilotState = SensorEvents.IAutopilotState
 import Property = Bacon.Property
 
-const MQTT_BROKER = 'ws://mqtt-home.chacal.fi:8883'
+const MQTT_BROKER = 'ws://freya-raspi.chacal.fi:8883'
 const SIGNALK_BASEURL = 'http://freya-raspi.chacal.fi'
 
 interface AutopilotComponentState {
