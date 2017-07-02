@@ -40,7 +40,7 @@ function waitForConnect<A>(client: Client): EventStream<A, Client> {
 }
 
 function autopilotStatesFromBroker(client: Client, instance: string) {
-  client.subscribe(`/sensor/${instance}/b/state`)
+  client.subscribe(`/local/sensor/${instance}/b/state`)
   return Bacon.fromEvent(client, 'message', autopilotStateFromMqttMessage)
 }
 
