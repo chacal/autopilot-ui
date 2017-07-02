@@ -51,7 +51,7 @@ export default class Autopilot extends React.Component<{}, AutopilotComponentSta
     const variation = this.state.variation || 0
 
     if(pilotState && pilotState.course) {
-      return courseDiv(Math.round(radsToDeg(pilotState.course + variation)), variation ? '°T' : '°M')
+      return courseDiv(Math.round(radsToDeg(safeRadians(pilotState.course + variation))), variation ? '°T' : '°M')
     } else {
       return courseDiv()
     }
@@ -96,3 +96,8 @@ function magneticVariationFromSignalK(): Property<{}, number> {
 }
 
 function radsToDeg(rads: number): number { return rads * 180 / Math.PI }
+
+function safeRadians(rads: number): number {
+  let newRads = rads % (2 * Math.PI)
+  return newRads < 0 ? newRads + 2 * Math.PI : newRads
+}
